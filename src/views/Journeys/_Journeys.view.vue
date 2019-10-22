@@ -2,7 +2,7 @@
   <div class="page-wrap">
     <div id="page__journeys" class="page" :class="{ 'overlay-is-opened' : overlayIsOpened }">
       <div class="fixed">
-        <h1>Verbindungen</h1>
+        <h1>Verbindungen.</h1>
 
         <section class="journey-inputs">
           <div class="journey-inputs__left"></div>
