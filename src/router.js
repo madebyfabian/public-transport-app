@@ -4,7 +4,7 @@ import Departures from './views/Departures.view.vue'
 
 Vue.use(Router)
 
-const CURR_VERSION = '2.0',
+const CURR_VERSION = '2.1',
       MAIN_PATH = `/${CURR_VERSION}`
 
 const router = new Router({
