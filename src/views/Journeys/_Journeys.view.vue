@@ -1,13 +1,13 @@
 <template>
-  <div class="page-wrap">
+  <div>
     <div id="page__journeys" class="page" :class="{ 'overlay-is-opened' : overlayIsOpened }">
-      <div class="fixed">
-        <h1>Verbindungen.</h1>
+      <section class="page__fixed-box">
+        <h1>Verbindungen</h1>
 
-        <section class="journey-inputs">
-          <div class="journey-inputs__left"></div>
+        <div class="section__inputs">
+          <div class="section__inputs__left"></div>
 
-          <div class="journey-inputs__line">
+          <div class="section__inputs__line">
             <div class="backdrop" id="backdrop--start">
               <div class="backdrop__content">
                 <SVGIcon class="input-icon" name="search" />
@@ -35,10 +35,10 @@
             </div>
           </div>
           
-          <div class="journey-inputs__line">
+          <div class="section__inputs__line">
             <div class="backdrop" id="backdrop--destination">
               <div class="backdrop__content">
-                <SVGIcon class="input-icon" name="search" />
+                <SVGIcon class="input-icon" name="location" />
                 <Input 
                   @focusInput="toggleBackdrop('open', 'backdrop--destination')"
                   @clickIconRight="swapInputValues"
@@ -62,21 +62,26 @@
               </div>
             </div>
           </div>
-        </section>
-      </div>
-
-      <JourneysResults
+        </div>
+      </section>
+      
+      <section 
         v-if="results"
-        :journeys="results"
-      />
+        class="section__results">
 
-      <AlertBox type="warning" v-if="results === false">
+        <JourneysResults :journeys="results" />
+      </section>
+
+      <AlertBox 
+        v-if="results === false"
+        type="warning">
+
         Keine Fahrten gefunden.
       </AlertBox>
     </div>
     
     <transition name="slide">
-      <router-view v-bind:key="$route.params.id" />
+      <router-view :key="$route.params.id" />
     </transition>
   </div>
 </template>
@@ -268,7 +273,10 @@
                 continue
               
               // Overwrite existing passedStops array of strings with the parsed array of objects
+              // console.log('original passedStops', passedStops)
               interchange.passedStops = parsePassedStops(passedStops)
+              // console.log('parsed passedStops', interchange.passedStops)
+              console.log('\n')
             }
 
             journeys[i].rendered = {
@@ -328,25 +336,15 @@
 
 <style lang="scss" scoped>
   #page__journeys {
-    --fixed-height: 252px;
     transition: transform .3s ease;
-    padding-top: calc(var(--fixed-height) + 1.5rem);
 
     &.overlay-is-opened {
       transform: translateX(-25%);
     }
+  }
 
-    .fixed {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      padding: var(--space-status-bar) 1rem 1rem;
-      height: var(--fixed-height);
-      z-index: 900;
-      background: var(--color-bg-primary);
-      box-shadow: 0 0 0 1px var(--color-bg-secondary);
-    }
+  .section__results {
+    padding-top: .5rem;
   }
 
   .backdrop {
@@ -420,13 +418,12 @@
     }
   }
 
-  .journey-inputs {
+  .section__inputs {
     @include flex;
-    // position: relative;
     flex-wrap: wrap;
 
-    // three dots
-    &__left {
+    &__left { 
+      // three dots
       position: absolute;
       width: 18px;
 

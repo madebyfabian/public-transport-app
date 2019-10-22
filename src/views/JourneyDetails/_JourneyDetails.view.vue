@@ -38,7 +38,7 @@
               </p>
             </div>
             
-            <div class="mode">
+            <div class="mode" v-if="leg.passedStops">
               <Accordion>
                 <div slot="clickable" class="cell clickable-content">
                   <p>{{ leg.passedStops.length }} Stationen</p>
@@ -106,7 +106,7 @@
       }
     },
     computed: {
-      journey: function() {
+      journey() {
         return store.selectedJourneyData
       }
     },
@@ -114,7 +114,11 @@
       clickedBackBtn() {
         this.hasTransition = true
         this.$router.go(-1)
-      }
+      },
+
+      logIt(data) {
+        console.log(data)
+      } 
     }
   }
 </script>
@@ -130,7 +134,9 @@
     padding-top: 0;
     background: var(--color-bg-primary);
     overflow-y: auto;
-
+    padding-left: 1rem;
+    padding-right: 1rem;
+    
     &.has-transition {
       transition: var(--transition-time-overlay);
     }
@@ -221,7 +227,7 @@
       }
 
       .mode-info {
-        margin-top: 1rem;
+        margin: 1rem 0;
 
         &__type {
           grid-column: 2 / 3;
@@ -236,12 +242,12 @@
       }
 
       .mode {
-        margin: .75rem 0 1rem;
+        margin: -.25rem 0 1rem;
         position: relative;
 
         .Accordion.is-opened {
           & ~ .mode__bg-layer {
-            width: 100%;
+            width: calc(100% + .25rem);
           }
 
           & ~ .mode__icon {

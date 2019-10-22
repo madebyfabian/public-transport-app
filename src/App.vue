@@ -11,63 +11,79 @@
 </template>
 
 <script>
-import SVGIconProvider from '@/components/SVGIconProvider.vue'
-import TabBar from '@/components/TabBar.vue'
+  import SVGIconProvider from '@/components/SVGIconProvider.vue'
+  import TabBar from '@/components/TabBar.vue'
 
-export default {
-  name: 'App',
-  components: {
-    SVGIconProvider,
-    TabBar
-  },
-  mounted() {
-    /**
-     * Viewport Height API
-     */
-    let pendingUpdate = false;
-    function viewportHandler() {
-      if (pendingUpdate) return;
-      pendingUpdate = true;
+  export default {
+    name: 'App',
+    components: {
+      SVGIconProvider,
+      TabBar
+    },
 
-      requestAnimationFrame(() => {
-        pendingUpdate = false
+    mounted() {
+      /**
+       * Viewport Height API
+       */
+      let pendingUpdate = false;
+      function viewportHandler() {
+        if (pendingUpdate) return;
+        pendingUpdate = true;
 
-        let viewport = window.visualViewport
-        document.documentElement.style.setProperty('--height-viewport', viewport.height + "px");
-      })
+        requestAnimationFrame(() => {
+          pendingUpdate = false
+
+          let viewport = window.visualViewport
+          document.documentElement.style.setProperty('--height-viewport', viewport.height + "px");
+        })
+      }
+
+      if (!navigator.standalone)
+        document.documentElement.style.setProperty('--space-bottom-tab-bar', 0 + "px");
+
+      // Call onload
+      viewportHandler()
+
+      // Call when viewport size updated
+      window.visualViewport.addEventListener('resize', viewportHandler)
+    },
+
+    methods: {
+      handleScroll (event) {
+        if (window.scrollY <= 0)
+          document.documentElement.style.setProperty('--opacity-fixed-box-border', 0)
+          
+        else
+          document.documentElement.style.setProperty('--opacity-fixed-box-border', 1)
+      }
+    },
+
+    created () {
+      window.addEventListener('scroll', this.handleScroll);
+      this.handleScroll()
+    },
+
+    destroyed () {
+      window.removeEventListener('scroll', this.handleScroll);
     }
-
-    if (!navigator.standalone)
-      document.documentElement.style.setProperty('--space-bottom-tab-bar', 0 + "px");
-
-    // Call onload
-    viewportHandler()
-
-    // Call when viewport size updated
-    window.visualViewport.addEventListener('resize', viewportHandler)
   }
-}
 </script>
 
 <style lang="scss">
   @import url("./scss/vendor/_modern-normalize.scss");
-  
-  *, ::before, ::after {
-    box-sizing: border-box;
-    font-family: system-ui, system, sans-serif;
-  }
 
   :root {
-    --color-bg-primary:         #000;
-    --color-bg-secondary:       #1C1C1D;
-    --color-bg-border:          #3D3D40;
+    --color-bg-primary:             #000;
+    --color-bg-secondary:           #1C1C1D;
+    --color-bg-border:              #3D3D40;
+    
+    --color-text-primary:           #FFFFFF;
+    --color-text-secondary:         #8E8E92;
 
-    --color-text-primary:       #FFFFFF;
-    --color-text-secondary:     #8E8E92;
+    --color-icons:                  #5A5A5E;
 
-    --color-icons:              #5A5A5E;
-
-    --color-bg-transparent:     rgba(36, 36, 36, .6);
+    --color-bg-transparent:         rgba(36, 36, 36, .6);
+    --color-bg-primary-transparent: rgba(0, 0, 0, .6);
 
     @media (prefers-color-scheme: light) {
       --color-bg-primary:         #F2F2F7;
@@ -108,6 +124,7 @@ export default {
     margin: 0;
     height: var(--height-viewport);
     overflow-x: hidden;
+    overflow-y: scroll;
   }
 
   h1, h2, h3, h4, p {
@@ -136,7 +153,29 @@ export default {
   }
 
   .page {
-    padding: var(--space-status-bar) 1rem calc(var(--height-tab-bar) + 1rem);
+    padding-bottom: calc(var(--height-tab-bar) + 1rem);
+
+    &__fixed-box {
+      position: sticky;
+      top: 0;
+      width: 100vw;
+      padding: var(--space-status-bar) 1rem 1.5rem;
+      z-index: 900;
+      background: var(--color-bg-primary-transparent);
+      backdrop-filter: blur(27.18px);
+
+      &::after {
+        content: '';
+        height: 1px;
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        width: 100vw;
+        opacity: var(--opacity-fixed-box-border);
+        transition: opacity 150ms ease;
+        border-bottom: .33px solid var(--color-bg-border);
+      }
+    }
   }
 
   .page, body, #app {

@@ -4,6 +4,11 @@
  */
 export default (passedStops) => {
   try {
+    // First check, if array only has a single item in it, because then, it's an object
+    // Then it would be { stop: "..." } instead of ["...", "..."]
+    if (passedStops.hasOwnProperty('stop'))
+      passedStops = Object.values(passedStops)
+
     let passedStopsArr = []
     
     for (let k = 0; k < passedStops.length; k++) {

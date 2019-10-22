@@ -57,19 +57,20 @@ export default {
 <style lang="scss" scoped>
   .departures__container {
     background: var(--color-bg-secondary);
-    padding: 1rem;
     font-size: 14px;
-    margin: 2rem -1rem;
+    margin: .5rem 0 2rem;
+    padding: 1rem 0;
 
     .departure {
       display: grid;
       grid-template-columns: 1.5rem 1.75rem 1fr 3.5rem;
       grid-gap: .5rem;
+      margin: 0 1rem;
 
       &:not(:last-child) {
         border-bottom: .33px solid var(--color-bg-border);
-        padding-bottom: .65rem;
-        margin-bottom: .65rem;
+        padding-bottom: .75rem;
+        margin-bottom: .75rem;
       }
 
       &__vehicle-type {

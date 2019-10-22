@@ -1,27 +1,29 @@
 <template>
   <div class="page" id="page__home">
-    <h1>Abfahrten</h1>
-    <div class="station-input">
-      <span class="station-input__icon">
-        <SVGIcon name="search" />
-      </span>
-      
-      <input 
-        @input="searchStations"
-        v-model="searchQuery"
-        @focus="searchQuery = ''"
-        ref="stationsInput"
-        class="station-input__textfield" 
-        type="text" 
-        autofocus
-        spellcheck="false"
-        placeholder="Haltestelle"
-      />
-    </div>
+    <div class="page__fixed-box">
+      <h1>Abfahrten</h1>
+      <div class="station-input">
+        <span class="station-input__icon">
+          <SVGIcon name="search" />
+        </span>
+        
+        <input 
+          @input="searchStations"
+          v-model="searchQuery"
+          @focus="searchQuery = ''"
+          ref="stationsInput"
+          class="station-input__textfield" 
+          type="text" 
+          autofocus
+          spellcheck="false"
+          placeholder="Haltestelle"
+        />
+      </div>
 
-    <DeparturesSuggestions
-      :suggestions="suggestions"
-      :selectedStationID="selectedStationID" />
+      <DeparturesSuggestions
+        :suggestions="suggestions"
+        :selectedStationID="selectedStationID" />
+    </div>
 
     <section class="departures">
       <DeparturesContainer
@@ -50,7 +52,6 @@
 </template>
 
 <script>
-import pulltorefresh from 'vue-awesome-pulltorefresh'
 import DeparturesContainer from '@/components/departures/DeparturesContainer'
 import DeparturesSuggestions from '@/components/departures/DeparturesSuggestions'
 import SVGIcon from '@/components/SVGIcon'
@@ -75,34 +76,6 @@ export default {
       selectedStationID: null,
       isLoadingDepartures: false,
     }
-  },
-
-  mounted(){
-    pulltorefresh.init({
-      mainElement: '#page__home',
-      iconRefreshing: `
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" width="1.5rem" height="1.5rem" viewBox="0 0 50 50" xml:space="preserve">
-          <path d="M8.5 15.7a18.68 18.68 0 1 0 32.7 18.1l-3.57-1.96a14.62 14.62 0 0 1-25.56-14.17L8.5 15.69z">
-            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"/>
-          </path>
-        </svg>`,
-      iconArrow: '↓',
-      onRefresh: () => {
-        const vueData = this
-        return new Promise(async(resolve, reject) => {
-          if (!vueData.selectedStationID) 
-            // user didn't fetch anything yet, so nothing to refresh there
-            resolve()
-          else
-            // user already selected a station & fetched it. Let's refresh it!
-            resolve(await vueData.getAndSetDepartures())
-        })
-      }
-    })
-  },
-
-  beforeDestroy() {
-    pulltorefresh.destroyAll()
   },
 
   methods: {
@@ -208,33 +181,9 @@ export default {
 
   async created() {
     this.suggestions = this.getLastSearches()
-
-    // const fetchData = await fetch('https://www.vgn.de/verbindungen/?to=de%3A09564%3A510&td=de%3A09564%3A434'),
-    //       HTML      = await fetchData.text()
-
-    // console.log(HTML)
   }
 }
 </script>
-
-<style lang="scss">
- .ptr--ptr  {
-    box-shadow: none!important;
-    font-size: 1rem!important;
-
-    * {
-      color: var(--color-text-secondary)!important;
-    }
-
-    svg {
-      fill: var(--color-text-secondary)!important;
-    }
-
-    .ptr--text {
-      display: none;
-    }
-  }
-</style>
 
 <style lang="scss" scoped>
   .station-input {
@@ -298,6 +247,8 @@ export default {
     font-size: 13px;
     color: var(--color-text-secondary);
     line-height: 150%;
+    padding: 0 1rem;
+    margin: 0 0 1rem;
     
     &__item {
       background: var(--color-bg-secondary);

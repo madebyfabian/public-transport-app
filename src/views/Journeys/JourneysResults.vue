@@ -1,11 +1,11 @@
 <template>
-  <section class="results">
-    <div class="results__text">Ergebnisse:</div>
+  <div class="JourneysResults">
+    <div class="JourneysResults__text">Ergebnisse:</div>
     <article
       v-for="(journey, i) in journeys"
       :key="i"
       @click="openJourneyDetails(i)"
-      class="results__item">
+      class="JourneysResults__item">
 
       <div class="line--top">
         <span class="time">
@@ -20,7 +20,7 @@
 
       <JourneyInterchangesList :changes="journey.legs" />
     </article>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -78,9 +78,9 @@
 </script>
 
 <style lang="scss" scoped>
-  .results {
-    margin: 0 -1rem;
-
+  .JourneysResults {
+    min-height: calc(100% + 1rem);
+    
     &__text {
       font-weight: 500;
       font-size: .75rem;
@@ -94,7 +94,10 @@
     &__item {
       padding: 1rem;
       background: var(--color-bg-secondary);
-      margin-bottom: .75rem;
+      
+      &:not(:last-child) {
+        margin-bottom: .75rem;
+      }
 
       .line--top {
         margin-bottom: .75rem;
