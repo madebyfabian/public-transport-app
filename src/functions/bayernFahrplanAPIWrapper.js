@@ -7,12 +7,13 @@
 /**
  * Helpers
  */
-const JOURNEYS_URL = 'XML_TRIP_REQUEST2',
-      STATIONS_URL = 'XML_STOPFINDER_REQUEST'
+const BASE_URL      = 'https://www.bayern-fahrplan.de/jqm/beg_lite',
+      JOURNEYS_URL  = 'XML_TRIP_REQUEST2',
+      STATIONS_URL  = 'XML_STOPFINDER_REQUEST'
 
 const buildURL = (URLPath, params) => {
   let query = Object.keys(params).map(k => k + '=' + params[k]).join('&')
-  return `https://www.bayern-fahrplan.de/jqm/beg_lite/${URLPath}?${query}`
+  return `${BASE_URL}/${URLPath}?${query}`
 }
 
 

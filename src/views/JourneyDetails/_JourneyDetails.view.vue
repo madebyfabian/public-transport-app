@@ -41,7 +41,7 @@
             <div class="mode" v-if="leg.passedStops">
               <Accordion>
                 <div slot="clickable" class="cell clickable-content">
-                  <p>{{ leg.passedStops.length }} Stationen</p>
+                  <p>{{ leg.passedStops.length }} {{ (leg.passedStops.length === 1) ? 'Stationen' : 'Station' }}</p>
                 </div>
                 <div slot="content">
                   <div class="mode__passed-stops-wrap">

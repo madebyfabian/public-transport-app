@@ -1,23 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Departures from './views/Departures.view.vue'
+import Departures from './views/Departures/_Departures.view.vue'
+
+import { version as CURR_VERSION } from '../package.json'
 
 Vue.use(Router)
 
-const CURR_VERSION = '2.1',
-      MAIN_PATH = `/${CURR_VERSION}`
-
-const router = new Router({
+export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
     {
-      path: MAIN_PATH + '/departures',
+      path: '/' + CURR_VERSION + '/departures',
       name: 'departures',
       component: Departures
     },
     {
-      path: MAIN_PATH + '/journeys',
+      path: '/' + CURR_VERSION + '/journeys',
       name: 'journeys',
       component: () => import(/* webpackChunkName: "journeys" */ './views/Journeys/_Journeys.view.vue'),
       children: [
@@ -36,8 +35,9 @@ const router = new Router({
       ]
     },
 
-    { path: '*', redirect: { name: 'departures' } },
+    { 
+      path: '*',
+      redirect: { name: 'departures' }
+    },
   ]
 })
-
-export default router

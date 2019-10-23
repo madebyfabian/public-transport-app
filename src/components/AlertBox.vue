@@ -29,6 +29,7 @@ export default {
 <style lang="scss" scoped>
   .alert-box {
     padding: 1rem;
+    margin: 0 1rem;
     padding-left: 1.25rem;
     border-radius: 10px;
     background: var(--bg);
