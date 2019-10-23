@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <main>
     <div id="page__journeys" class="page" :class="{ 'overlay-is-opened' : overlayIsOpened }">
       <section class="page__fixed-box">
         <h1>Verbindungen</h1>
@@ -83,7 +83,7 @@
     <transition name="slide">
       <router-view :key="$route.params.id" />
     </transition>
-  </div>
+  </main>
 </template>
 
 <script>
