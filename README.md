@@ -4,15 +4,15 @@
 
 PWA for getting current departures and journeys for VGN Nuremberg Public Transport System. 
 
-# Install instructions
+## Install instructions
 
-This repo can be installed and started by typing:
+Clone this repo and type in this command inside the folder to install all the dependencies:
 
 ```
 npm install
 ```
 
-and then
+to start a local server (localhost:8080) with the app running, type:
 ```
 npm start
 ```
