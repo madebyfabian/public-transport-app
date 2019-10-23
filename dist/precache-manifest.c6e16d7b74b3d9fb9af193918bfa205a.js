@@ -8,8 +8,8 @@ self.__precacheManifest = [
     "url": "/robots.txt"
   },
   {
-    "revision": "05bededbaf4c9a234aecec27e0c17dc2",
-    "url": "/img/favicons/favicon-32x32.png"
+    "revision": "f3ac50f54a6db010b64a6aa977b70a31",
+    "url": "/img/favicons/mstile-144x144.png"
   },
   {
     "revision": "35005f6c7746618117d8",
@@ -24,40 +24,40 @@ self.__precacheManifest = [
     "url": "/js/journeys.7c4468b3.js"
   },
   {
-    "revision": "76185fc991a39c726cd0c71df81dbd39",
-    "url": "/img/favicons/mstile-310x150.png"
+    "revision": "7ccda52370f533ecd7821ce72b12e0c7",
+    "url": "/img/favicons/mstile-150x150.png"
   },
   {
     "revision": "00ad20826924faaaf09b",
     "url": "/css/journeys.84e4ff46.css"
   },
   {
-    "revision": "432dd7868a8a18a108631004a1b7bd76",
-    "url": "/img/favicons/favicon-16x16.png"
-  },
-  {
     "revision": "6e4fc62affa6e3e9504a453822b8416e",
     "url": "/img/favicons/apple-touch-icon.png"
   },
   {
-    "revision": "dd4ae752e97a3e89f987",
-    "url": "/js/app.0d440cbf.js"
+    "revision": "432dd7868a8a18a108631004a1b7bd76",
+    "url": "/img/favicons/favicon-16x16.png"
+  },
+  {
+    "revision": "3b34095e82456bd5ee89",
+    "url": "/js/app.2676e7a7.js"
   },
   {
     "revision": "bc98ad2596e2b347a2f894323b846e09",
     "url": "/img/favicons/mstile-310x310.png"
   },
   {
-    "revision": "7ccda52370f533ecd7821ce72b12e0c7",
-    "url": "/img/favicons/mstile-150x150.png"
+    "revision": "05bededbaf4c9a234aecec27e0c17dc2",
+    "url": "/img/favicons/favicon-32x32.png"
   },
   {
-    "revision": "ae4d7dedaa3ccc599d39b35ea9466ce4",
+    "revision": "002c666d2a4d04dc4647f0aa78a21acc",
     "url": "/index.html"
   },
   {
-    "revision": "f3ac50f54a6db010b64a6aa977b70a31",
-    "url": "/img/favicons/mstile-144x144.png"
+    "revision": "76185fc991a39c726cd0c71df81dbd39",
+    "url": "/img/favicons/mstile-310x150.png"
   },
   {
     "revision": "0a75c460ca16b3a87457fc382890bca7",
@@ -76,7 +76,7 @@ self.__precacheManifest = [
     "url": "/css/journeyDetails.7cfaa5b6.css"
   },
   {
-    "revision": "dd4ae752e97a3e89f987",
-    "url": "/css/app.74f3f211.css"
+    "revision": "3b34095e82456bd5ee89",
+    "url": "/css/app.a2079993.css"
   }
 ];
