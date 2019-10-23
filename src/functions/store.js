@@ -4,7 +4,8 @@ import Vue from "vue";
 
 export const store = Vue.observable({
   selectedJourneyData: null,
-  selectedJourneyUUID: ''
+  selectedJourneyUUID: '',
+  showServiceWorkerReloadSnackbar: false
 });
 
 export const mutations = {

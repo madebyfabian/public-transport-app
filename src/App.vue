@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <div v-if="showServiceWorkerReloadSnackbar">
+      Update available!
+      <div :click="location.reload()"><u>Reload</u></div>
+    </div>
+
     <keep-alive>    
       <router-view/>
     </keep-alive>
@@ -14,11 +19,19 @@
   import SVGIconProvider from '@/components/SVGIconProvider.vue'
   import TabBar from '@/components/TabBar.vue'
 
+  import { store } from '@/functions/store'
+
   export default {
     name: 'App',
     components: {
       SVGIconProvider,
       TabBar
+    },
+
+    computed: {
+      showServiceWorkerReloadSnackbar() {
+        return store.showServiceWorkerReloadSnackbar
+      }
     },
 
     mounted() {
