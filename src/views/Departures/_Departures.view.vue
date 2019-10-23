@@ -1,7 +1,7 @@
 <template>
   <div class="page" id="page__home">
     <div class="page__fixed-box">
-      <h1>Abfahrten (ha!ha!)</h1>
+      <h1>Abfahrten (ha!ha!ha!)</h1>
       <div class="station-input">
         <span class="station-input__icon">
           <SVGIcon name="search" />
