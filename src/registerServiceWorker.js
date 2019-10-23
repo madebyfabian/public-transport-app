@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log('New content is downloading.')
     },
     updated () {
-      console.log('New content is available; please refresh. (aktualisierte meldung v4)')
+      console.log('New content is available; please refresh. (aktualisierte meldung v5)')
 
       unregister()
       store.showServiceWorkerReloadSnackbar = true
