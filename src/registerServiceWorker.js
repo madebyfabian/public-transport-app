@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log('New content is downloading.')
     },
     updated () {
-      console.log('New content is available; please refresh.')
+      console.log('New content is available; please refresh. (aktualisierte meldung)')
       if (refreshing) return;
       window.location.reload();
       refreshing = true;
