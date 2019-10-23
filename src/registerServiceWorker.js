@@ -2,8 +2,6 @@
 
 import { register } from 'register-service-worker'
 
-var refreshing;
-
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready () {
@@ -22,11 +20,15 @@ if (process.env.NODE_ENV === 'production') {
       console.log('New content is downloading.')
     },
     updated () {
-      console.log('New content is available; please refresh. (aktualisierte meldung v2)')
-      if (refreshing) return;
-      window.location.reload();
-      refreshing = true;
-      console.log('test')
+      console.log('New content is available; please refresh. (aktualisierte meldung v3)')
+
+      caches.keys().then(function(names) {
+        for (let name of names) {
+          caches.delete(name).then(() => {
+            console.log('cache deleted:', name)
+          })
+        }
+      })
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.')
