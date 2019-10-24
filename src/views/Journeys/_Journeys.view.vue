@@ -99,12 +99,12 @@
   // Import store
   import { store } from '@/functions/store'
 
-  // Import bayern-fahrplan API functions
+  // Import DB API functions
   import { 
     fetchJourneys, 
     fetchStations,
     fetchNearestStation
-  } from '@/functions/bayernFahrplanAPIWrapper'
+  } from '@/functions/APIWrapper_db'
 
   // Import helper functions
   import getCurrPos from '@/functions/getCurrPos.fn'

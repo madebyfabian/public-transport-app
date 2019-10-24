@@ -64,9 +64,16 @@
   import DeparturesResults from './DeparturesResults'
   import DeparturesSuggestions from './DeparturesSuggestions'
 
+  // Import Vue UI components
   import LoadingSpinner from '@/components/LoadingSpinner'
   import SVGIcon from '@/components/SVGIcon'
   import AlertBox from '@/components/AlertBox'
+
+  // Import API functions
+  import { 
+    fetchDepartures,
+    fetchStations
+  } from '@/functions/APIWrapper_vag.js'
 
   export default {
     name: 'home',
@@ -93,25 +100,6 @@
     },
 
     methods: {
-      getAndSetDepartures: function() {
-        return new Promise(async (resolve, reject) => {
-          try {
-            const departuresResponse = await fetch(`https://start.vag.de/dm/api/abfahrten.json/vgn/${this.selectedStationID}/?timedelay=0&product=Ubahn,Bus,Tram`)
-
-            if (!departuresResponse.ok)
-              throw new Error('Network response was not ok.');
-            
-            const departuresData = await departuresResponse.json()
-
-            this.departures = (departuresData.Abfahrten.length === 0) ? [] : departuresData.Abfahrten
-            resolve(departuresData)
-          } catch (error) {
-            console.error(error)
-            reject()
-          }
-        })
-      },
-
       selectStation: async function(id) {
         try {
           this.selectedStationID = id
@@ -119,10 +107,11 @@
           this.departuresImportantInfos = null
           this.isLoadingDepartures = true
           
-          const departuresData = await this.getAndSetDepartures()
+          const departuresRes = await fetchDepartures(this.selectedStationID),
+                departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
 
+          this.departures = departuresData
           this.isLoadingDepartures = false
-
 
           // save this selected station into the localStorage list of last searches
           const selectedStation = this.suggestions.find((el) => {
@@ -147,8 +136,8 @@
 
 
           // look if there are some additional information for this station
-          if (departuresData.Sonderinformationen)
-            this.departuresImportantInfos = departuresData.Sonderinformationen
+          if (departuresRes.Sonderinformationen)
+            this.departuresImportantInfos = departuresRes.Sonderinformationen
 
         } catch (error) {
           this.departures = false
@@ -179,8 +168,7 @@
           return 
         }
 
-        const searchResponse = await fetch(`https://start.vag.de/dm/api/haltestellen.json/vgn?name=${this.searchQuery}`),
-              searchData = await searchResponse.json()
+        const searchData = await fetchStations(this.searchQuery)
 
         if (searchData.Haltestellen.length === 0)
           return // no station found 

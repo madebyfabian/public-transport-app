@@ -1,5 +1,6 @@
 /**
- * Using an inoffical API found at https://www.bayern-fahrplan.de/m5/de/#trips
+ * Info: "db" stands for Deutsche Bahn, (https://www.bahn.de), which is the operating company bavaria (the state I live in Germany) for trains across cities
+ * Using an inoffical API found in the network devtools at https://www.bayern-fahrplan.de/m5/de/#trips
  */
 
 
