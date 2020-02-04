@@ -14,6 +14,8 @@
   import SVGIconProvider from '@/components/UI/SVGIconProvider.vue'
   import TabBar from '@/components/UI/TabBar.vue'
 
+  import { version as CURR_VERSION } from '../package.json'
+
   export default {
     name: 'App',
     components: {
@@ -46,6 +48,10 @@
 
       // Call when viewport size updated
       window.visualViewport.addEventListener('resize', viewportHandler)
+
+      // if curr version in URL is not the current package.json version
+      if (!this.$route.fullPath.startsWith(`/${CURR_VERSION}`)) 
+        this.$router.push('/')
     },
 
     methods: {
