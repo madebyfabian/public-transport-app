@@ -104,13 +104,12 @@
     fetchJourneys, 
     fetchStations,
     fetchNearestStation
-  } from '@/functions/APIWrapper_db'
+  } from '@/functions/APIWrapperDB'
 
   // Import helper functions
   import getCurrPos from '@/functions/getCurrPos.fn'
   import renderDurationStr from '@/functions/renderDurationStr.fn'
   import parsePassedStops from '@/functions/parsePassedStops.fn'
-
   
   export default {
     name: 'Journeys',
