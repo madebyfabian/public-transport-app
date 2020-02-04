@@ -9,7 +9,7 @@
     <Snackbar 
       v-if="updateExists" 
       @buttonClick="refreshApp">
-      
+
       Update verfügbar!
     </Snackbar>
 
