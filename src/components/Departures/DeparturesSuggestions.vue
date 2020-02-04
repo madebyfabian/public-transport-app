@@ -38,7 +38,7 @@
       width: 100%;
       // @include flex(flex-start);
       display: grid;
-      grid-template-columns: repeat(99, min-content);
+      grid-template-columns: repeat(999, min-content);
       overflow: auto;
       gap: .5rem;
 
@@ -48,11 +48,11 @@
     }
 
     .suggestion {
-      padding: .5rem 1rem;
+      padding: .5rem .75rem;
       background: var(--color-bg-secondary);
       color: var(--color-text-primary);
       display: inline-block;
-      border-radius: 100px; // was .5rem
+      border-radius: .625rem; // was .5rem
       position: relative;
 
       &.is-selected {
@@ -62,12 +62,14 @@
       &__name {
         &-main, &-sub {
           white-space: pre;
+          line-height: 1rem;
+          display: block;
+          height: 1rem;
         }
 
         &-main {
           display: block;
           font-size: 13px;
-          margin-bottom: -3px;
         }
 
         &-sub {

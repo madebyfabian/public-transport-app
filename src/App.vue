@@ -170,6 +170,10 @@
     overflow-y: scroll;
   }
 
+  *:not(html) {
+    font-size: 14px;
+  }
+
   h1, h2, h3, h4, p {
     margin: 0
   }

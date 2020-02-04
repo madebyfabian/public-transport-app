@@ -242,7 +242,7 @@
   .station-input {
     height: 3rem;
     width: 100%;
-    border-radius: 100px; // was 10px
+    border-radius: .75rem; // was 10px
     background-color: var(--color-bg-secondary);
     overflow: hidden;
     @include flex(flex-start);
