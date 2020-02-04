@@ -4,11 +4,14 @@
       <router-view/>
     </keep-alive>
 
-    <span style="text-align: center;font-size: 10px; opacity: .2; position: fixed; bottom: 64px;right: 16px; z-index: 1100">V {{ version }}</span>
+    <span style="text-align: center;font-size: 10px; opacity: .2; position: fixed; bottom: 64px;right: 16px; z-index: 1100">V {{ versionNumber }}</span>
 
-    <button v-if="updateExists" @click="refreshApp">
-      New update available. Click to update :)
-    </button>
+    <Snackbar 
+      v-if="updateExists" 
+      @buttonClick="refreshApp">
+      
+      Update verfügbar!
+    </Snackbar>
 
     <TabBar />
 
@@ -19,6 +22,7 @@
 <script>
   import SVGIconProvider from '@/components/UI/SVGIconProvider.vue'
   import TabBar from '@/components/UI/TabBar.vue'
+  import Snackbar from '@/components/UI/Snackbar'
 
   import { version } from '../package.json'
 
@@ -26,10 +30,12 @@
     name: 'App',
     components: {
       SVGIconProvider,
-      TabBar
+      TabBar,
+      Snackbar
     },
     data: function() {
       return {
+        versionNumber: version,
         refreshing: false,
         registration: null,
         updateExists: false,
@@ -37,6 +43,9 @@
     },
 
     methods: {
+      test () {
+        console.log('test')
+      },
       showRefreshUI (e) {
         // Display a button inviting the user to refresh/reload the app due
         // to an app update being available.
