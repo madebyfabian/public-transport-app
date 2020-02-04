@@ -29,52 +29,52 @@
 
 <style lang="scss" scoped>
   .suggestions {
-    margin: calc(1rem - 6px) -1rem -6px; 
-    max-height: 120px;
+    margin: 1rem -1rem 0; 
     user-select: none;
 
     &__container {
-      padding: .25rem 10px 0;
-      margin: -.25rem 0 0;
+      padding: 0 1rem 0;
       height: 100%;
       width: 100%;
-      @include flex(flex-start);
+      // @include flex(flex-start);
+      display: grid;
+      grid-template-columns: repeat(99, min-content);
       overflow: auto;
+      gap: .5rem;
 
       &::-webkit-scrollbar {
         display: none;
       }
     }
-  }
 
-  .suggestion {
-    padding: .5rem .75rem;
-    margin: 6px;
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    display: block;
-    border-radius: .5rem;
-    position: relative;
+    .suggestion {
+      padding: .5rem 1rem;
+      background: var(--color-bg-secondary);
+      color: var(--color-text-primary);
+      display: inline-block;
+      border-radius: 100px; // was .5rem
+      position: relative;
 
-    &.is-selected {
-      box-shadow: inset 0 0 0 2px var(--color-bg-border);
-    }
-
-    &__name {
-      &-main, &-sub {
-        white-space: pre;
+      &.is-selected {
+        box-shadow: inset 0 0 0 2px var(--color-bg-border);
       }
 
-      &-main {
-        display: block;
-        font-size: 13px;
-        margin-bottom: -3px;
-      }
+      &__name {
+        &-main, &-sub {
+          white-space: pre;
+        }
 
-      &-sub {
-        font-size: 11px;
-        font-weight: 300;
-        color: var(--color-text-secondary);
+        &-main {
+          display: block;
+          font-size: 13px;
+          margin-bottom: -3px;
+        }
+
+        &-sub {
+          font-size: 11px;
+          font-weight: 300;
+          color: var(--color-text-secondary);
+        }
       }
     }
   }

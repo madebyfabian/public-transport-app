@@ -240,9 +240,9 @@
 
 <style lang="scss" scoped>
   .station-input {
-    height: 3.5rem;
+    height: 3rem;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 100px; // was 10px
     background-color: var(--color-bg-secondary);
     overflow: hidden;
     @include flex(flex-start);
@@ -297,7 +297,7 @@
     &__later-btn {
       font-size: 14px;
       font-weight: bold;
-      color: var(--color-text-secondary);
+      color: var(--color-blue);
       height: 2rem;
       display: inline-flex;
       justify-content: center;
