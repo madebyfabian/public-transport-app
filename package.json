@@ -1,7 +1,5 @@
 {
-  "name": "client",
-  "version": "3.1.1",
-  "private": true,
+  "name": "public-transport-app",
   "scripts": {
     "build": "vue-cli-service build",
     "start": "vue-cli-service serve"

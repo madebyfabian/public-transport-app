@@ -9,13 +9,11 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      // path: '/' + CURR_VERSION + '/departures',
       path: '/departures',
       name: 'departures',
       component: Departures
     },
     {
-      // path: '/' + CURR_VERSION + '/journeys',
       path: '/journeys',
       name: 'journeys',
       component: () => import(/* webpackChunkName: "journeys" */ './views/journeys.view.vue'),
@@ -34,7 +32,6 @@ export default new Router({
         }
       ]
     },
-
     { 
       path: '*',
       redirect: { name: 'departures' }
