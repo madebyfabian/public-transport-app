@@ -10,7 +10,7 @@
       v-if="updateExists" 
       @buttonClick="refreshApp">
 
-      Update verfügbar.
+      Update verfügbar!
     </Snackbar>
 
     <TabBar />
