@@ -5,7 +5,7 @@
     </keep-alive>
 
     <button v-if="updateExists" @click="refreshApp">
-      New version available! Click to update
+      New update available. Click to update!
     </button>
 
     <TabBar />
@@ -100,7 +100,7 @@
       // Call when viewport size updated
       window.visualViewport.addEventListener('resize', viewportHandler)
     },
-    
+
     destroyed () {
       window.removeEventListener('scroll', this.handleScroll)
     }
