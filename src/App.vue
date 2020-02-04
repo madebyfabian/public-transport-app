@@ -4,6 +4,8 @@
       <router-view/>
     </keep-alive>
 
+    <span style="text-align: center;font-size: 10px; opacity: .2; position: fixed; bottom: 64px;right: 16px; z-index: 1100">V {{ version }}</span>
+
     <button v-if="updateExists" @click="refreshApp">
       New update available. Click to update :)
     </button>
@@ -17,6 +19,8 @@
 <script>
   import SVGIconProvider from '@/components/UI/SVGIconProvider.vue'
   import TabBar from '@/components/UI/TabBar.vue'
+
+  import { version } from '../package.json'
 
   export default {
     name: 'App',
