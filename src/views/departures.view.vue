@@ -21,6 +21,7 @@
       </div>
 
       <DeparturesSuggestions
+        v-if="showStationSuggestions"
         :suggestions="suggestions"
         :selectedStationID="selectedStationID"
       />
@@ -100,6 +101,8 @@
         departuresImportantInfos: null,
         selectedStationID: null,
         isLoadingDepartures: false,
+
+        showStationSuggestions: true
       }
     },
 
@@ -166,9 +169,6 @@
           lastSearches.unshift(selectedStation)
           localStorage.setItem('lastSearches', JSON.stringify(lastSearches))
 
-          console.log(departuresRes)
-
-
           // look if there are some additional information for this station
           if (departuresRes.Sonderinformationen)
             this.departuresImportantInfos = departuresRes.Sonderinformationen
@@ -191,10 +191,11 @@
       searchStations: async function() {
         const searchQuery = this.searchQuery
         if (searchQuery.length < 3) {
-          // the search query is lower than 4 chars
+          // the search query is lower than 3 chars
           this.departures = null
           this.departuresImportantInfos = null
           this.selectedStationID = null
+          this.showStationSuggestions = false
 
           // reset suggestions to the ones in localstorage
           this.suggestions = this.getLastSearches()
@@ -208,6 +209,7 @@
           return // no station found 
 
         this.suggestions = this.generateSaveableData(searchData.Haltestellen)
+        this.showStationSuggestions = true
       },
 
       generateSaveableData: function(VAGAPIData) {
