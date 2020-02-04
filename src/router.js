@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Departures from './views/Departures/_Departures.view.vue'
+import Departures from './views/departures.view.vue'
 
 import { version as CURR_VERSION } from '../package.json'
 
@@ -18,12 +18,12 @@ export default new Router({
     {
       path: '/' + CURR_VERSION + '/journeys',
       name: 'journeys',
-      component: () => import(/* webpackChunkName: "journeys" */ './views/Journeys/_Journeys.view.vue'),
+      component: () => import(/* webpackChunkName: "journeys" */ './views/journeys.view.vue'),
       children: [
         {
           path: 'details',
           name: 'journeyDetails',
-          component: () => import(/* webpackChunkName: "journeyDetails" */ './views/JourneyDetails/_JourneyDetails.view.vue'),
+          component: () => import(/* webpackChunkName: "journeyDetails" */ './views/journeyDetails.view.vue'),
           beforeEnter: async (to, from, next) => {
             // if the referrer is not the journeys page
             if (from.name !== 'journeys') 

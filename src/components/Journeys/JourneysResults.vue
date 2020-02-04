@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import JourneyInterchangesList from './JourneyInterchangesList'
+  import JourneyInterchangesList from '@/components/Journeys/JourneyInterchangesList'
 
   import { store } from '@/functions/store'
 

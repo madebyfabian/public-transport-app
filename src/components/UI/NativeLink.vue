@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import SVGIcon from './SVGIcon'
+  import SVGIcon from '@/components/UI/SVGIcon'
 
   export default {
     name: 'NativeLink',

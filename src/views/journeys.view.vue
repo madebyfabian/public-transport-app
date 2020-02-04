@@ -88,13 +88,13 @@
 
 <script>
   // Import Global Components
-  import Input from '@/components/Input'
-  import SVGIcon from '@/components/SVGIcon'
-  import AlertBox from '@/components/AlertBox'
+  import Input from '@/components/UI/Input'
+  import SVGIcon from '@/components/UI/SVGIcon'
+  import AlertBox from '@/components/UI/AlertBox'
   
   // Import Journey Components
-  import JourneysStationsResults from './JourneysStationsResults'
-  import JourneysResults from './JourneysResults'
+  import JourneysStationsResults from '@/components/Journeys/JourneysStationsResults'
+  import JourneysResults from '@/components/Journeys/JourneysResults'
   
   // Import store
   import { store } from '@/functions/store'

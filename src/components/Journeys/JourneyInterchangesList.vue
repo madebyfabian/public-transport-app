@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import JourneyModeItem from './JourneyModeItem'
+  import JourneyModeItem from '@/components/Journeys/JourneyModeItem'
 
   export default {
     name: 'JourneyChangesList',

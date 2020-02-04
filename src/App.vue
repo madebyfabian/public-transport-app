@@ -11,8 +11,8 @@
 </template>
 
 <script>
-  import SVGIconProvider from '@/components/SVGIconProvider.vue'
-  import TabBar from '@/components/TabBar.vue'
+  import SVGIconProvider from '@/components/UI/SVGIconProvider.vue'
+  import TabBar from '@/components/UI/TabBar.vue'
 
   export default {
     name: 'App',

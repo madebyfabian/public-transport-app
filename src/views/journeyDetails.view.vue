@@ -82,12 +82,12 @@
 </template>
 
 <script>
-  import SVGIcon from '@/components/SVGIcon'
-  import Accordion from '../../components/Accordion'
-  import NativeLink from '../../components/NativeLink'
+  import SVGIcon from '@/components/UI/SVGIcon'
+  import Accordion from '@/components/UI/Accordion'
+  import NativeLink from '@/components/UI/NativeLink'
 
-  import JourneyInterchangesList from '../Journeys/JourneyInterchangesList'
-  import JourneyModeItem from '../Journeys/JourneyModeItem'
+  import JourneyInterchangesList from '@/components/Journeys/JourneyInterchangesList'
+  import JourneyModeItem from '@/components/Journeys/JourneyModeItem'
 
   import { store } from '@/functions/store'
 

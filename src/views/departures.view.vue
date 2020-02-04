@@ -61,19 +61,19 @@
 </template>
 
 <script>
-  import DeparturesResults from './DeparturesResults'
-  import DeparturesSuggestions from './DeparturesSuggestions'
+  import DeparturesResults from '@/components/Departures/DeparturesResults'
+  import DeparturesSuggestions from '@/components/Departures/DeparturesSuggestions'
 
   // Import Vue UI components
-  import LoadingSpinner from '@/components/LoadingSpinner'
-  import SVGIcon from '@/components/SVGIcon'
-  import AlertBox from '@/components/AlertBox'
+  import LoadingSpinner from '@/components/UI/LoadingSpinner'
+  import SVGIcon from '@/components/UI/SVGIcon'
+  import AlertBox from '@/components/UI/AlertBox'
 
   // Import API functions
   import { 
     fetchDepartures,
     fetchStations
-  } from '@/functions/APIWrapper_vag.js'
+  } from '@/functions/APIWrapperVAG'
 
   export default {
     name: 'home',
@@ -114,17 +114,12 @@
           this.isLoadingDepartures = false
 
           // save this selected station into the localStorage list of last searches
-          const selectedStation = this.suggestions.find((el) => {
-            return el.id === id
-          })
+          const selectedStation = this.suggestions.find(el => el.id === id)
           const lastSearches = this.getLastSearches()
 
 
           // look if the current search is already saved in the list of last searches
-          const stationAlreadyInList = lastSearches.find((el) => {
-            return el.id === id 
-          })
-
+          const stationAlreadyInList = lastSearches.find(el => el.id === id)
           if (stationAlreadyInList) {
             // station is already on list. Remove it and add it to the top of the list
             const key = lastSearches.findIndex((el) => el.id === id)

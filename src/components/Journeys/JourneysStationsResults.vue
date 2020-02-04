@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import SVGIcon from '@/components/SVGIcon'
+  import SVGIcon from '@/components/UI/SVGIcon'
 
   export default {
     name: 'JourneysStationsResults',
