@@ -28,10 +28,15 @@
 
     <section class="results">
       <div v-if="departures">
-        <div v-if="departures.length !== 0" class="results__container">
-          <DeparturesResults :departures="departures" />
+        <div v-if="departures.length !== 0">
+          <div class="results__container">
+            <DeparturesResults :departures="departures" />
+          </div>
+          <div class="results__controls">
+            <div @click="getDepartures('LATER')" class="results__later-btn">Später</div>
+          </div>
         </div>
-
+        
         <AlertBox v-else type="warning">
           Keine Abfahrten gefunden.
         </AlertBox>
@@ -49,13 +54,12 @@
     </section>
 
     <section class="important-infos" v-if="departuresImportantInfos">
-      <article
-        class="important-infos__item"
+      <AlertBox
+        type="info"
         v-for="(info, i) in departuresImportantInfos"
         :key="i">
-
         {{ info }}
-      </article>
+      </AlertBox>
     </section>
   </div>
 </template>
@@ -100,18 +104,51 @@
     },
 
     methods: {
+      getDepartures: function (method = null) {
+        let delay = 0
+        this.isLoadingDepartures = true
+        
+        if (method === 'LATER') {
+          // Get the last result's departure minute and take this as the delay
+          delay = this.departures[this.departures.length - 1].AbfahrtszeitIst - 1 // - 1 to get sure we'll catch every departure. We're filtering out doubles further down
+        } else {
+          this.departures = null
+        }
+
+        return fetchDepartures(this.selectedStationID, delay).then(departuresRes => {
+          let departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
+
+          // Calc departureTime in minutes, because API only gives us a datetime string
+          departuresData = departuresData.map(departure => {
+            const departureDate = Date.parse(departure.AbfahrtszeitIst),
+                  now = Date.now(),
+                  diff = Math.round((departureDate - now) / 1000 / 60) /* milliseconds / 1000 = seconds; / 60 = minutes */
+            departure.AbfahrtszeitIst = diff
+            return departure
+          })
+
+          // Add newly fetched items to the end
+          if (method === 'LATER') {
+            for (const newDeparture of departuresData) {
+              // Filter out every item we already have in the list and would then get shown twice.
+              if (!this.departures.find(existingDeparture => existingDeparture.Fahrtnummer === newDeparture.Fahrtnummer))
+                this.departures.push(newDeparture)
+            }
+          } else
+            this.departures = departuresData
+
+          this.isLoadingDepartures = false
+
+          return departuresRes
+        })
+      },
+
       selectStation: async function(id) {
         try {
           this.selectedStationID = id
-          this.departures = null
           this.departuresImportantInfos = null
-          this.isLoadingDepartures = true
           
-          const departuresRes = await fetchDepartures(this.selectedStationID),
-                departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
-
-          this.departures = departuresData
-          this.isLoadingDepartures = false
+          const departuresRes = await this.getDepartures()
 
           // save this selected station into the localStorage list of last searches
           const selectedStation = this.suggestions.find(el => el.id === id)
@@ -128,6 +165,8 @@
 
           lastSearches.unshift(selectedStation)
           localStorage.setItem('lastSearches', JSON.stringify(lastSearches))
+
+          console.log(departuresRes)
 
 
           // look if there are some additional information for this station
@@ -244,24 +283,40 @@
     &__container {
       background: var(--color-bg-secondary);
       font-size: 14px;
-      margin-bottom: 2rem;
       padding: 1rem 0;
+    }
+
+    &__controls {
+      margin: 1.5rem 0 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    &__later-btn {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--color-text-secondary);
+      height: 2rem;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1rem;
+      border-radius: .5rem;
+      background: var(--color-bg-secondary);
+
+      &-icon {
+        height: .75rem;
+        width: .75rem;
+        fill: var(--color-icons);
+        margin-left: .5rem;
+        transform: rotate(90deg) translateX(1px);
+      }
     }
   }
 
   .important-infos {
     display: grid;
     grid-gap: 1rem;
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    line-height: 150%;
-    padding: 0 1rem;
-    margin: 0 0 1rem;
-    
-    &__item {
-      background: var(--color-bg-secondary);
-      border-radius: 10px;
-      padding: .75rem 1rem;
-    }
+    margin: 1.5rem 0;
   }
 </style>

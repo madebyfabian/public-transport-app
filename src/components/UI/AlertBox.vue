@@ -4,7 +4,7 @@
     :class="`alert-box--${type}`"
     :style="`--bg: var(--color-bg-${type}); --accent: var(--color-${type});`">
 
-    <SVGIcon :name="type" />
+    <SVGIcon :name="type" class="alert-box__icon" />
     <p><slot /></p>
   </div>
 </template>
@@ -36,6 +36,11 @@ export default {
     overflow: hidden;
     position: relative;
     @include flex(flex-start);
+
+    &__icon {
+      flex-shrink: 0;
+      align-self: flex-start
+    }
 
     &::after {
       content: '';

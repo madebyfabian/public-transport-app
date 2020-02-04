@@ -12,11 +12,11 @@
       <span class="departure__line-name">{{ departure.Linienname }}</span>
       <span class="departure__target">{{ departure.Richtungstext }}</span>
       <span 
-        v-if="calcDepartureTime(departure.AbfahrtszeitIst) !== 0"
+        v-if="departure.AbfahrtszeitIst !== 0"
         class="departure__time" 
         :class="{ 'has-no-realtime-data': !departure.Prognose }">
         
-        {{ calcDepartureTime(departure.AbfahrtszeitIst) }} Min.
+        {{ departure.AbfahrtszeitIst }} Min.
       </span>
       <span 
         v-else
@@ -37,15 +37,6 @@ export default {
   props: ['departures'],
   components: {
     SVGIcon
-  },
-  methods: {
-    calcDepartureTime: function(timestampString) {
-      const departure = Date.parse(timestampString),
-            now = Date.now(),
-            diff = Math.round((departure - now) / 1000 / 60) /* milliseconds / 1000 = seconds; / 60 = minutes */
-
-      return diff
-    }
   }
 }
 </script>

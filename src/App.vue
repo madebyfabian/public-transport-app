@@ -110,6 +110,9 @@
     --color-bg-error:   rgba(255, 51, 51, .15);
     --color-error:      rgba(255, 51, 51);
 
+    --color-bg-info:    rgba(58, 130, 247, .15);
+    --color-info:       rgba(58, 130, 247);
+
     --height-tab-bar: calc(49px + var(--space-bottom-tab-bar));
     --space-status-bar: 44px;
     --space-bottom-tab-bar: 34px;
@@ -159,7 +162,7 @@
       position: sticky;
       top: 0;
       width: 100vw;
-      padding: var(--space-status-bar) 1rem 1.5rem;
+      padding: var(--space-status-bar) 1rem 1.25rem;
       z-index: 900;
       background: var(--color-bg-primary-transparent);
       backdrop-filter: blur(27.18px);
