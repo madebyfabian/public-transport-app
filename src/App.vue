@@ -5,7 +5,7 @@
     </keep-alive>
 
     <button v-if="updateExists" @click="refreshApp">
-      New update available. Click to update!
+      New update available. Click to update :)
     </button>
 
     <TabBar />
