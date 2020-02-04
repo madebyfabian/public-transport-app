@@ -11,12 +11,7 @@ module.exports = {
         `
       }
     }
-  },
-  pwa: {
-    workboxOptions: {
-      skipWaiting: true
-    }
-  } 
+  }
   // devServer: {
   //   https: {
   //     key: fs.readFileSync('./dev/example.com+5-key.pem'),
