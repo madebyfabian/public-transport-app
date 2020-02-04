@@ -4,10 +4,6 @@ import router from './router'
 import './registerServiceWorker'
 
 
-// Configure vue-fragment's <fragment> element
-import { Plugin } from 'vue-fragment'
-Vue.use(Plugin)
-
 // Configure vue-states plugin
 import VueStates from '@sum.cumo/vue-states'
 Vue.use(VueStates)
