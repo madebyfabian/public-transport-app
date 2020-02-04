@@ -5,12 +5,19 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        data: `
+        prependData: `
           // Import Mixins
           @import "@/scss/_mixins.scss";
         `
-      }
-    }
+      },
+    },
+  },
+  pwa: {
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: './src/sw.js',
+      swDest: 'service-worker.js',
+    },
   }
   // devServer: {
   //   https: {
