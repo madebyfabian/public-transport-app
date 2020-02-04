@@ -2,8 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Departures from './views/departures.view.vue'
 
-// import { version as CURR_VERSION } from '../package.json'
-
 Vue.use(Router)
 
 export default new Router({

@@ -4,7 +4,9 @@
       <router-view/>
     </keep-alive>
 
-    <span style="text-align: center;font-size: 10px; opacity: .2; position: fixed; bottom: 64px;right: 16px; z-index: 1100">V {{ version }}</span>
+    <button v-if="updateExists" @click="refreshApp">
+      New version available! Click to update
+    </button>
 
     <TabBar />
 
@@ -16,8 +18,6 @@
   import SVGIconProvider from '@/components/UI/SVGIconProvider.vue'
   import TabBar from '@/components/UI/TabBar.vue'
 
-  import { version } from '../package.json'
-
   export default {
     name: 'App',
     components: {
@@ -26,38 +26,30 @@
     },
     data: function() {
       return {
-        version
+        refreshing: false,
+        registration: null,
+        updateExists: false,
       }
-    },
-
-    mounted() {
-      /**
-       * Viewport Height API
-       */
-      let pendingUpdate = false;
-      function viewportHandler() {
-        if (pendingUpdate) return;
-        pendingUpdate = true;
-
-        requestAnimationFrame(() => {
-          pendingUpdate = false
-
-          let viewport = window.visualViewport
-          document.documentElement.style.setProperty('--height-viewport', viewport.height + "px");
-        })
-      }
-
-      if (!navigator.standalone)
-        document.documentElement.style.setProperty('--space-bottom-tab-bar', 0 + "px");
-
-      // Call onload
-      viewportHandler()
-
-      // Call when viewport size updated
-      window.visualViewport.addEventListener('resize', viewportHandler)
     },
 
     methods: {
+      showRefreshUI (e) {
+        // Display a button inviting the user to refresh/reload the app due
+        // to an app update being available.
+        // The new service worker is installed, but not yet active.
+        // Store the ServiceWorkerRegistration instance for later use.
+        this.registration = e.detail;
+        this.updateExists = true;
+      },
+
+      refreshApp () {
+        // Handle a user tap on the update app button.
+        this.updateExists = false;
+        // Protect against missing registration.waiting.
+        if (!this.registration || !this.registration.waiting) { return; }
+        this.registration.waiting.postMessage('skipWaiting');
+      },
+
       handleScroll (event) {
         if (window.scrollY <= 0)
           document.documentElement.style.setProperty('--opacity-fixed-box-border', 0)
@@ -68,12 +60,49 @@
     },
 
     created () {
-      window.addEventListener('scroll', this.handleScroll);
+      // Listen for swUpdated event and display refresh snackbar as required.
+      document.addEventListener('swUpdated', this.showRefreshUI, { once: true });
+      // Refresh all open app tabs when a new service worker is installed.
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (this.refreshing) return;
+        this.refreshing = true;
+        window.location.reload();
+      });
+
+      window.addEventListener('scroll', this.handleScroll)
       this.handleScroll()
     },
 
+    mounted() {
+      /**
+       * Viewport Height API
+       */
+      let pendingUpdate = false
+      function viewportHandler() {
+        if (pendingUpdate)
+          return
+        pendingUpdate = true
+
+        requestAnimationFrame(() => {
+          pendingUpdate = false
+
+          let viewport = window.visualViewport
+          document.documentElement.style.setProperty('--height-viewport', viewport.height + "px")
+        })
+      }
+
+      if (!navigator.standalone)
+        document.documentElement.style.setProperty('--space-bottom-tab-bar', 0 + "px")
+
+      // Call onload
+      viewportHandler()
+
+      // Call when viewport size updated
+      window.visualViewport.addEventListener('resize', viewportHandler)
+    },
+    
     destroyed () {
-      window.removeEventListener('scroll', this.handleScroll);
+      window.removeEventListener('scroll', this.handleScroll)
     }
   }
 </script>

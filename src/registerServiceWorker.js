@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+// See: https://medium.com/@dougallrich/give-users-control-over-app-updates-in-vue-cli-3-pwas-20453aedc1f2
+
 import { register } from 'register-service-worker'
 
 if (process.env.NODE_ENV === 'production') {
@@ -10,8 +12,13 @@ if (process.env.NODE_ENV === 'production') {
         'For more details, visit https://goo.gl/AFskqB'
       )
     },
-    registered () {
-      console.log('Service worker has been registered.')
+    registered (registration) {
+      console.log('Service worker has been registered.');
+
+      // Routinely check for app updates by testing for a new service worker.
+      setInterval(() => {
+        registration.update();
+      }, 1000 * 60 * 60); // e.g. hourly checks
     },
     cached () {
       console.log('Content has been cached for offline use.')
@@ -19,12 +26,15 @@ if (process.env.NODE_ENV === 'production') {
     updatefound () {
       console.log('New content is downloading.')
     },
-    updated () {
-      console.log('New content is available; please refresh.')
+    updated (registration) {
+      console.log('New content is available; please refresh.');
 
-      setTimeout(() => {
-        window.location.reload(true)
-      }, 1000)
+      // Add a custom event and dispatch it.
+      // Used to display of a 'refresh' banner following a service worker update.
+      // Set the event payload to the service worker registration object.
+      document.dispatchEvent(
+        new CustomEvent('swUpdated', { detail: registration })
+      );
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.')
