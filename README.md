@@ -16,6 +16,8 @@ Clone this repo and type in this command inside the folder to install all the de
 npm install
 ```
 
+Also be sure to install the VS Code extension ["Path Intellisense"](https://marketplace.visualstudio.com/items?itemName=christian-kohler.path-intellisense)
+
 to start a local server (localhost:8080) with the app running, type:
 ```
 npm start
