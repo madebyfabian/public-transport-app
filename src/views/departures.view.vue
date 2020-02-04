@@ -16,7 +16,7 @@
           type="text" 
           autofocus
           spellcheck="false"
-          placeholder="Haltestelle"
+          placeholder="Wo möchtest du hin?"
         />
       </div>
 
