@@ -238,12 +238,10 @@
           return // no station found
 
         const nearestStation = searchData[0]
-
-        console.log(searchData)
         
         this.suggestions = this.generateSaveableData(searchData)
         this.selectStation(searchData[0].VGNKennung)
-        this.searchQuery = nearestStation.Haltestellenname
+        this.searchQuery = this.suggestions[0].name.main
       },
 
       generateSaveableData: function(VAGAPIData) {
