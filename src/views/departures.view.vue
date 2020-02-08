@@ -2,24 +2,19 @@
   <div class="page" id="page__home">
     <div class="page__fixed-box">
       <h1>Abfahrten</h1>
-      
-      <div class="station-input">
-        <span class="station-input__icon">
-          <SVGIcon name="search" />
-        </span>
-        
-        <input 
-          @input="searchStations"
-          v-model="searchQuery"
-          @focus="resetSearchInput"
-          ref="stationsInput"
-          class="station-input__textfield" 
-          type="text" 
-          autofocus
-          spellcheck="false"
-          placeholder="Wo möchtest du starten?"
-        />
-      </div>
+
+      <Input 
+        @input="searchStations"
+        @focus="resetSearchInput"
+        v-model="searchQuery"
+        ref="stationsInput"
+        :iconLeft="{ name: 'search' }"
+        :iconRight="{ name: 'location-compass', onClick: searchStationsByLocation }"
+        type="text" 
+        autofocus
+        spellcheck="false"
+        placeholder="Wo möchtest du starten?"
+      />
 
       <DeparturesSuggestions
         v-if="showStationSuggestions"
@@ -36,7 +31,7 @@
             <DeparturesResults :departures="departures" />
           </div>
           <div class="results__controls">
-            <div @click="getDepartures('LATER')" class="results__later-btn">Später</div>
+            <div @click="getDepartures(true)" class="results__later-btn">Später</div>
           </div>
         </div>
         
@@ -75,14 +70,12 @@
   import LoadingSpinner from '@/components/UI/LoadingSpinner'
   import SVGIcon from '@/components/UI/SVGIcon'
   import AlertBox from '@/components/UI/AlertBox'
+  import Input from '@/components/UI/Input.vue'
 
-  import setLoadingTrue from '@/functions/setLoadingTrue'
+  // Import functions
+  import { fetchDepartures, fetchStations, fetchStationsByCoords } from '@/functions/APIWrapperVAG'
+  import getCurrPos from '@/functions/getCurrPos.fn'
 
-  // Import API functions
-  import { 
-    fetchDepartures,
-    fetchStations
-  } from '@/functions/APIWrapperVAG'
 
   export default {
     name: 'home',
@@ -92,7 +85,8 @@
       DeparturesSuggestions,
       SVGIcon,
       LoadingSpinner,
-      AlertBox
+      AlertBox,
+      Input
     },
 
     data: function() {
@@ -111,12 +105,12 @@
     },
 
     methods: {
-      getDepartures: function (method = null) {
+      getDepartures: function (loadWithDelay = false) {
         let delay = 0
         this.isLoadingDepartures = true
         this.isLoading = true
 
-        if (method === 'LATER') 
+        if (loadWithDelay) 
           // Get the last result's departure minute and take this as the delay. - 1 to get sure we'll catch every departure. We're filtering out doubles further down
           delay = this.departures[this.departures.length - 1].AbfahrtszeitIst - 1 
         else 
@@ -135,7 +129,7 @@
           })
 
           // Add newly fetched items to the end
-          if (method === 'LATER') {
+          if (loadWithDelay) {
             for (const newDeparture of departuresData) {
               // Filter out every item we already have in the list and would then get shown twice.
               if (!this.departures.find(existingDeparture => existingDeparture.Fahrtnummer === newDeparture.Fahrtnummer))
@@ -172,14 +166,8 @@
           this.setLastSearches(lastSearches)
 
           // If user searched for a station before he selected it:
-          if (this.searchQuery.length !== 0) {
-            const suggestions__container = this.$refs.departuresSuggestions.$refs.suggestions__container
-            suggestions__container.scrollTo({ top: 0, left: 0 })
-
-            // Timeout, just to not have a "jump"-animation.
-            this.suggestions = lastSearches
+          if (this.searchQuery.length !== 0)
             this.searchQuery = ''
-          }
 
           // Get upcoming departures for this station
           const departuresRes = await this.getDepartures()
@@ -233,30 +221,42 @@
         }
 
         const searchData = await fetchStations(this.searchQuery)
-        if (searchData.Haltestellen.length === 0)
+        if (!searchData.length)
           return // no station found 
 
-        this.suggestions = this.generateSaveableData(searchData.Haltestellen)
+        this.suggestions = this.generateSaveableData(searchData)
         this.showStationSuggestions = true
       },
 
-      generateSaveableData: function(VAGAPIData) {
-        let saveableData = []
-        for (let i = 0; i < VAGAPIData.length; i++) {
-          const station = VAGAPIData[i],
-                name = station.Haltestellenname.split('('),
-                id = station.VGNKennung
+      searchStationsByLocation: async function() {
+        const currPos  = await getCurrPos(),
+              givenLat = currPos.coords.latitude, // 49.4525482
+              givenLon = currPos.coords.longitude // 11.1142636 
 
-          saveableData.push({
-            id,
+        const searchData = await fetchStationsByCoords(givenLat, givenLon)
+        if (!searchData.length)
+          return // no station found
+
+        const nearestStation = searchData[0]
+
+        console.log(searchData)
+        
+        this.suggestions = this.generateSaveableData(searchData)
+        this.selectStation(searchData[0].VGNKennung)
+        this.searchQuery = nearestStation.Haltestellenname
+      },
+
+      generateSaveableData: function(VAGAPIData) {
+        return VAGAPIData.map(station => {
+          const name = station.Haltestellenname.split('(')
+          return {
+            id: station.VGNKennung, 
             name: {
               main: name[0].trim(),
               sub: name[1].replace(')', '')
             }
-          })
-        }
-
-        return saveableData
+          }
+        })
       }
     },
 
@@ -267,45 +267,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .station-input {
-    height: 3rem;
-    width: 100%;
-    border-radius: .75rem; // was 10px
-    background-color: var(--color-bg-secondary);
-    overflow: hidden;
-    @include flex(flex-start);
-    position: relative;
-
-    &__icon {
-      display: block;
-      height: 100%;
-      @include flex(flex-end);
-
-      svg {
-        width: 18px;
-        height: 18px;
-        margin: 0 .5rem 0 1rem;
-        fill: var(--color-icons);
-      }
-    }
-
-    &__textfield {
-      height: 100%;
-      display: block;
-      border: none;
-      appearance: none;
-      margin: 0;
-      padding: 0;
-      outline: none;
-      width: 100%;
-      background-color: transparent;
-
-      &::placeholder { color: var(--color-text-secondary); opacity: 1;  }
-      &:-ms-input-placeholder { color: var(--color-text-secondary); }
-      &::-ms-input-placeholder {  color: var(--color-text-secondary); }
-    }
-  }
-
   .results {
     position: relative;
     margin-top: .5rem;

@@ -1,11 +1,12 @@
 <template>
   <div class="input">
     <div 
-      @click="$emit('clickIconLeft')"
-      v-if="iconLeft"
+      v-if="iconLeft && iconLeft.name"
+      @click="() => 'onClick' in iconLeft ? iconLeft.onClick() : null"
+      :class="{ 'is-clickable': 'onClick' in iconLeft }"
       class="input__icon-container">
 
-      <SVGIcon :name="iconLeft" />
+      <SVGIcon :name="iconLeft.name" />
     </div>
 
     <div class="input__floating-label-container">
@@ -25,11 +26,12 @@
     </div>
 
     <div 
-      @click="$emit('clickIconRight')"
-      v-if="iconRight"
+      v-if="iconRight && iconRight.name"
+      @click="() => 'onClick' in iconRight ? iconRight.onClick() : null"
+      :class="{ 'is-clickable': 'onClick' in iconRight }"
       class="input__icon-container">
 
-      <SVGIcon :name="iconRight" />
+      <SVGIcon :name="iconRight.name" />
     </div>
   </div>
 </template>
@@ -118,7 +120,15 @@
       svg {
         width: 18px;
         height: 18px;
-        fill: var(--color-text-secondary);
+        pointer-events: none;
+        fill: var(--color-icons);
+      }
+
+      &.is-clickable {
+        svg {
+          fill: var(--color-text-secondary);
+          pointer-events: all;
+        }
       }
     }
   }
