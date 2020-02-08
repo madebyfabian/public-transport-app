@@ -1,6 +1,6 @@
 <template>
   <section class="suggestions">
-    <div class="suggestions__container">
+    <div class="suggestions__container" ref="suggestions__container">
       <article
         class="suggestion"
         v-for="item in suggestions"

@@ -19,7 +19,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "journeys" */ './views/journeys.view.vue'),
       children: [
         {
-          path: '/details',
+          path: '/journey-details',
           name: 'journeyDetails',
           component: () => import(/* webpackChunkName: "journeyDetails" */ './views/journeyDetails.view.vue'),
           beforeEnter: async (to, from, next) => {

@@ -2,6 +2,7 @@
   <div class="page" id="page__home">
     <div class="page__fixed-box">
       <h1>Abfahrten</h1>
+      
       <div class="station-input">
         <span class="station-input__icon">
           <SVGIcon name="search" />
@@ -10,18 +11,19 @@
         <input 
           @input="searchStations"
           v-model="searchQuery"
-          @focus="searchQuery = ''"
+          @focus="resetSearchInput"
           ref="stationsInput"
           class="station-input__textfield" 
           type="text" 
           autofocus
           spellcheck="false"
-          placeholder="Wo möchtest du hin?"
+          placeholder="Wo möchtest du starten?"
         />
       </div>
 
       <DeparturesSuggestions
         v-if="showStationSuggestions"
+        ref="departuresSuggestions"
         :suggestions="suggestions"
         :selectedStationID="selectedStationID"
       />
@@ -48,7 +50,7 @@
           Netzwerk-Fehler
         </AlertBox>
       </div>
-  
+
       <div v-if="isLoadingDepartures" class="results__loading-animation">
         <LoadingSpinner />
       </div>
@@ -74,6 +76,8 @@
   import SVGIcon from '@/components/UI/SVGIcon'
   import AlertBox from '@/components/UI/AlertBox'
 
+  import setLoadingTrue from '@/functions/setLoadingTrue'
+
   // Import API functions
   import { 
     fetchDepartures,
@@ -94,7 +98,6 @@
     data: function() {
       return {
         suggestions: null,
-        suggestionsCloseIcon_visible: false,
         searchQuery: '',
 
         departures: null,
@@ -102,7 +105,8 @@
         selectedStationID: null,
         isLoadingDepartures: false,
 
-        showStationSuggestions: true
+        showStationSuggestions: true,
+        isLoading: false
       }
     },
 
@@ -110,13 +114,13 @@
       getDepartures: function (method = null) {
         let delay = 0
         this.isLoadingDepartures = true
-        
-        if (method === 'LATER') {
-          // Get the last result's departure minute and take this as the delay
-          delay = this.departures[this.departures.length - 1].AbfahrtszeitIst - 1 // - 1 to get sure we'll catch every departure. We're filtering out doubles further down
-        } else {
+        this.isLoading = true
+
+        if (method === 'LATER') 
+          // Get the last result's departure minute and take this as the delay. - 1 to get sure we'll catch every departure. We're filtering out doubles further down
+          delay = this.departures[this.departures.length - 1].AbfahrtszeitIst - 1 
+        else 
           this.departures = null
-        }
 
         return fetchDepartures(this.selectedStationID, delay).then(departuresRes => {
           let departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
@@ -141,6 +145,7 @@
             this.departures = departuresData
 
           this.isLoadingDepartures = false
+          this.isLoading = false
 
           return departuresRes
         })
@@ -150,13 +155,10 @@
         try {
           this.selectedStationID = id
           this.departuresImportantInfos = null
-          
-          const departuresRes = await this.getDepartures()
 
-          // save this selected station into the localStorage list of last searches
+          // Save the selected station into the localStorage list of last searches.
           const selectedStation = this.suggestions.find(el => el.id === id)
           const lastSearches = this.getLastSearches()
-
 
           // look if the current search is already saved in the list of last searches
           const stationAlreadyInList = lastSearches.find(el => el.id === id)
@@ -167,16 +169,37 @@
           }
 
           lastSearches.unshift(selectedStation)
-          localStorage.setItem('lastSearches', JSON.stringify(lastSearches))
+          this.setLastSearches(lastSearches)
+
+          // If user searched for a station before he selected it:
+          if (this.searchQuery.length !== 0) {
+            const suggestions__container = this.$refs.departuresSuggestions.$refs.suggestions__container
+            suggestions__container.scrollTo({ top: 0, left: 0 })
+
+            // Timeout, just to not have a "jump"-animation.
+            this.suggestions = lastSearches
+            this.searchQuery = ''
+          }
+
+          // Get upcoming departures for this station
+          const departuresRes = await this.getDepartures()
 
           // look if there are some additional information for this station
           if (departuresRes.Sonderinformationen)
             this.departuresImportantInfos = departuresRes.Sonderinformationen
 
         } catch (error) {
+          console.log(error)
           this.departures = false
           this.isLoadingDepartures = false
         }
+      },
+
+      setLastSearches: function(newValue) {
+        let newValueStr = JSON.stringify(newValue)
+        localStorage.setItem('lastSearches', newValueStr)
+
+        return newValue
       },
 
       getLastSearches: function() {
@@ -188,14 +211,20 @@
         return lastSearches || []
       },
 
+      resetSearchInput: function() {
+        this.searchQuery = ''
+        this.showStationSuggestions = true
+      },
+
       searchStations: async function() {
         const searchQuery = this.searchQuery
+
+        // If the search query is lower than 3 chars.
         if (searchQuery.length < 3) {
-          // the search query is lower than 3 chars
+          this.showStationSuggestions = searchQuery.length === 0 ? true : false
           this.departures = null
           this.departuresImportantInfos = null
           this.selectedStationID = null
-          this.showStationSuggestions = false
 
           // reset suggestions to the ones in localstorage
           this.suggestions = this.getLastSearches()
@@ -204,7 +233,6 @@
         }
 
         const searchData = await fetchStations(this.searchQuery)
-
         if (searchData.Haltestellen.length === 0)
           return // no station found 
 
