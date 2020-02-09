@@ -102,7 +102,7 @@
     },
 
     methods: {
-      getDepartures: function (loadWithDelay = false) {
+      getDepartures: async function (loadWithDelay = false) {
         let delay = 0
         this.isLoadingDepartures = true
         this.isLoading = true
@@ -113,33 +113,33 @@
         else 
           this.departures = null
 
-        return fetchDepartures(this.selectedStationID, delay).then(departuresRes => {
-          let departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
+        const departuresRes = await fetchDepartures(this.selectedStationID, delay)
+        let departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
 
-          // Calc departureTime in minutes, because API only gives us a datetime string
-          departuresData = departuresData.map(departure => {
-            const departureDate = Date.parse(departure.AbfahrtszeitIst),
-                  now = Date.now(),
-                  diff = Math.round((departureDate - now) / 1000 / 60) /* milliseconds / 1000 = seconds; / 60 = minutes */
-            departure.AbfahrtszeitIst = diff
-            return departure
-          })
-
-          // Add newly fetched items to the end
-          if (loadWithDelay) {
-            for (const newDeparture of departuresData) {
-              // Filter out every item we already have in the list and would then get shown twice.
-              if (!this.departures.find(existingDeparture => existingDeparture.Fahrtnummer === newDeparture.Fahrtnummer))
-                this.departures.push(newDeparture)
-            }
-          } else
-            this.departures = departuresData
-
-          this.isLoadingDepartures = false
-          this.isLoading = false
-
-          return departuresRes
+        // Calc departureTime in minutes, because API only gives us a datetime string
+        departuresData = departuresData.map(departure => {
+          const departureDate = Date.parse(departure.AbfahrtszeitIst),
+                now = Date.now(),
+                diff = Math.round((departureDate - now) / 1000 / 60) /* milliseconds / 1000 = seconds; / 60 = minutes */
+          departure.AbfahrtszeitIst = diff
+          return departure
         })
+
+        // Add newly fetched items to the end
+        if (loadWithDelay) {
+          for (const newDeparture of departuresData) {
+            // Filter out every item we already have in the list and would then get shown twice.
+            if (!this.departures.find(existingDeparture => existingDeparture.Fahrtnummer === newDeparture.Fahrtnummer))
+              this.departures.push(newDeparture)
+          }
+        } else
+          this.departures = departuresData
+
+        this.isLoadingDepartures = false
+        this.isLoading = false
+
+        return departuresRes
+
       },
 
       selectStation: async function(id) {
@@ -168,9 +168,6 @@
           // look if there are some additional information for this station
           if (departuresRes.Sonderinformationen)
             this.departuresImportantInfos = departuresRes.Sonderinformationen
-
-          this.searchQuery = selectedStation.name.main
-
         } catch (error) {
           console.log(error)
           this.departures = false

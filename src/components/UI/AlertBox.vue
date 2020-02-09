@@ -37,6 +37,10 @@ export default {
     position: relative;
     @include flex(flex-start);
 
+    &--info p {
+      color: var(--color-text-secondary);
+    }
+
     &__icon {
       flex-shrink: 0;
       align-self: flex-start

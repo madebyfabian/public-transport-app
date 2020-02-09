@@ -1,7 +1,3 @@
-import convertAPIDataFormats from './apis/convertAPIDataFormats'
-import sortByNearestLocation from './sortByNearestLocation'
-
-
 /**
  * "VAG" is the name of the local public transport provider (https://www.vag.de).
  * I have to use 2 API's, because those live departure data is only available for my city and not for the whole state I live in.
@@ -9,28 +5,82 @@ import sortByNearestLocation from './sortByNearestLocation'
  * DOCS: https://start.vag.de/dm/swagger/ui/index
  * At the time of development, API was in V1 ("PULS API 1.2")
  */
+import convertAPIDataFormats from './apis/convertAPIDataFormats'
+import sortByNearestLocation from './sortByNearestLocation'
 
 
- 
 const BASE_URL = 'https://start.vag.de/dm/api/v1'
-
 
 
 /**
  * Fetches the upcoming departures for a station based on it's ID
  * @param {String} selectedStationID The VGN Station ID String
- * @param {number} delay The departure-delay in minutes
+ * @param {Number} delay The departure-delay in minutes
  */
 export const fetchDepartures = async (selectedStationID, delay = 0) => {
   // Example: https://start.vag.de/dm/api/v1/abfahrten.json/vgn/429?timedelay=0
-  const departuresRes = await fetch(`${BASE_URL}/abfahrten.json/vgn/${selectedStationID}?timedelay=${delay}`)
-  if (!departuresRes.ok)
+  const apiRes = await fetch(`${BASE_URL}/abfahrten.json/vgn/${selectedStationID}?timedelay=${delay}`)
+  if (!apiRes.ok)
     throw new Error('Network response was not ok.')
   
-  const departuresData = await departuresRes.json()
-  return departuresData
+  let apiData = await apiRes.json()
+  if (!('Abfahrten' in apiData))
+    throw new Error('API Response was not as expected.')
+
+  console.log(apiData)
+
+  return apiData
 }
 
+
+
+// fetch('https://api.mailjet.com/v3.1/send', {
+//   method: 'POST',
+//   headers: {
+//     'Content-Type': 'application/json'
+//   },
+// })
+
+
+
+// var myHeaders = new Headers();
+// myHeaders.append("", "");
+// myHeaders.append("", "");
+
+
+
+
+
+
+/*
+
+
+
+curl -s \
+  -X POST \
+  --user "$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE" \
+  https://api.mailjet.com/v3.1/send \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "Messages":[
+      {
+        "From": {
+          "Email": "pilot@mailjet.com",
+          "Name": "Mailjet Pilot"
+        },
+        "To": [
+          {
+            "Email": "passenger1@mailjet.com",
+            "Name": "passenger 1"
+          }
+        ],
+        "Subject": "Your email flight plan!",
+        "TextPart": "Dear passenger 1, welcome to Mailjet! May the delivery force be with you!",
+        "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!"
+      }
+    ]
+  }'
+*/
 
 
 /**
