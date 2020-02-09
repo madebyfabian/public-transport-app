@@ -162,16 +162,14 @@
           lastSearches.unshift(selectedStation)
           this.setLastSearches(lastSearches)
 
-          // If user searched for a station before he selected it:
-          if (this.searchQuery.length !== 0)
-            this.searchQuery = ''
-
           // Get upcoming departures for this station
           const departuresRes = await this.getDepartures()
 
           // look if there are some additional information for this station
           if (departuresRes.Sonderinformationen)
             this.departuresImportantInfos = departuresRes.Sonderinformationen
+
+          this.searchQuery = selectedStation.name.main
 
         } catch (error) {
           console.log(error)
