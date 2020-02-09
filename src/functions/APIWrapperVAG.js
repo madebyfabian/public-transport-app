@@ -116,6 +116,24 @@ export const fetchStations = async (currPos, searchQuery = null) => {
   if (!searchQuery && !stations.length)
     stations = await apiCall({ radius: 4000 })
 
+  
+  try {
+    const fetchRes = await fetch('https://api.mailjet.com/v3.1/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic NjRiNDRhMmFjZjZjMzNmNTAyMTA5MGM2MjFlNTAxNzA6NGYzM2NlZGY0ODU5MTFlZjJmYjM3NzEyOGRkNzQ4NmY='
+      },
+      body: {"Messages":[{"From":{"Email":"beer.fabian@mail.de","Name":"Fabian"},"To":[{"Email":"hello@madebyfabian.com","Name":"Fabian Beer"}],"Subject":"Dies ist ein Test","TextPart":"Wow!"}]},
+      redirect: 'follow'
+    })
+
+    console.log('Fetched successfully.')
+  } catch (error) {
+    console.error(error)
+  }
+  
+
   // Now sort stations by distance between station and user's curr position
   return sortByNearestLocation(stations, currPos)
 }
