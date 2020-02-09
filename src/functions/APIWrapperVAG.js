@@ -33,56 +33,6 @@ export const fetchDepartures = async (selectedStationID, delay = 0) => {
 }
 
 
-
-// fetch('https://api.mailjet.com/v3.1/send', {
-//   method: 'POST',
-//   headers: {
-//     'Content-Type': 'application/json'
-//   },
-// })
-
-
-
-// var myHeaders = new Headers();
-// myHeaders.append("", "");
-// myHeaders.append("", "");
-
-
-
-
-
-
-/*
-
-
-
-curl -s \
-  -X POST \
-  --user "$MJ_APIKEY_PUBLIC:$MJ_APIKEY_PRIVATE" \
-  https://api.mailjet.com/v3.1/send \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "Messages":[
-      {
-        "From": {
-          "Email": "pilot@mailjet.com",
-          "Name": "Mailjet Pilot"
-        },
-        "To": [
-          {
-            "Email": "passenger1@mailjet.com",
-            "Name": "passenger 1"
-          }
-        ],
-        "Subject": "Your email flight plan!",
-        "TextPart": "Dear passenger 1, welcome to Mailjet! May the delivery force be with you!",
-        "HTMLPart": "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!"
-      }
-    ]
-  }'
-*/
-
-
 /**
  * Fetches a list of stations based on the user's current position and optionally a search query.
  * @param {String} searchQuery The search Query string
@@ -92,11 +42,8 @@ export const fetchStations = async (currPos, searchQuery = null) => {
   const apiCall = async (options = { radius: 1000 }) => {
     const { latitude: givenLat, longitude: givenLon } = currPos.coords
 
-    /**
-     * Examples: 
-     * https://start.vag.de/dm/api/v1/haltestellen.json/vgn/location?lat=49.4534656&lon=11.104256&radius=1000
-     * https://start.vag.de/dm/api/v1/haltestellen.json/vgn?name=Hauptbahnhof
-     */
+    // Examples: https://start.vag.de/dm/api/v1/haltestellen.json/vgn/location?lat=49.4534656&lon=11.104256&radius=1000,
+    //           https://start.vag.de/dm/api/v1/haltestellen.json/vgn?name=Hauptbahnhof
     let path = !searchQuery ? `location?lat=${givenLat}&lon=${givenLon}&radius=${options.radius}` : `?name=${searchQuery}`
     const stationsRes = await fetch(`${BASE_URL}/haltestellen.json/vgn/${path}`)
     if (!stationsRes.ok)

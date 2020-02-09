@@ -114,7 +114,7 @@
           this.departures = null
 
         const departuresRes = await fetchDepartures(this.selectedStationID, delay)
-        let departuresData = (departuresRes.Abfahrten.length === 0) ? [] : departuresRes.Abfahrten; // "Abfahrten" is german for Departures
+        let departuresData = departuresRes.Abfahrten;
 
         // Calc departureTime in minutes, because API only gives us a datetime string
         departuresData = departuresData.map(departure => {

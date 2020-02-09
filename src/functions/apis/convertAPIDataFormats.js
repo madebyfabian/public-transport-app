@@ -21,6 +21,11 @@ const providerVAG = (data, type) => {
 }
 
 
+/**
+ * Converts different API Response Data Formats into our own, english and mor readable data formats.
+ * @param data The data to convert.
+ * @param options Provider name and data type options Object.
+ */
 export default (data, options = { provider: null, type: null }) => {
   if (!data || !options || !options.provider || !options.type)
     throw new Error('Error with function parameters :/')
