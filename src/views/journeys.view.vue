@@ -12,7 +12,7 @@
               <div class="backdrop__content">
                 <SVGIcon class="input-icon" name="search" />
                 <Input 
-                  @focusInput="toggleBackdrop('open', 'backdrop--start')"
+                  @focus="toggleBackdrop('open', 'backdrop--start')"
                   @clickIconRight="getCurrPos"
                   @input="searchStations($event, start)"
                   v-model="start.inputValue"
@@ -40,7 +40,7 @@
               <div class="backdrop__content">
                 <SVGIcon class="input-icon" name="location" />
                 <Input 
-                  @focusInput="toggleBackdrop('open', 'backdrop--destination')"
+                  @focus="toggleBackdrop('open', 'backdrop--destination')"
                   @clickIconRight="swapInputValues"
                   @input="searchStations($event, destination)"
                   v-model="destination.inputValue"

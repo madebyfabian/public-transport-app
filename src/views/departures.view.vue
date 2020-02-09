@@ -6,13 +6,10 @@
       <Input 
         @input="searchStations"
         @focus="resetSearchInput"
-        v-model="searchQuery"
-        ref="stationsInput"
         :iconLeft="{ name: 'search' }"
         :iconRight="{ name: 'location-compass', onClick: searchStationsByLocation }"
-        type="text" 
-        autofocus
-        spellcheck="false"
+        v-model="searchQuery"
+        ref="stationsInput"
         placeholder="Wo möchtest du starten?"
       />
 
@@ -73,7 +70,7 @@
   import Input from '@/components/UI/Input.vue'
 
   // Import functions
-  import { fetchDepartures, fetchStations, fetchStationsByCoords } from '@/functions/APIWrapperVAG'
+  import { fetchDepartures, fetchStations } from '@/functions/APIWrapperVAG'
   import getCurrPos from '@/functions/getCurrPos.fn'
 
 
@@ -205,56 +202,42 @@
       },
 
       searchStations: async function() {
-        const searchQuery = this.searchQuery
+        const searchQuery = this.searchQuery,
+              currPos     = await getCurrPos()
 
         // If the search query is lower than 3 chars.
         if (searchQuery.length < 3) {
-          this.showStationSuggestions = searchQuery.length === 0 ? true : false
+          this.showStationSuggestions = searchQuery.length === 0
           this.departures = null
           this.departuresImportantInfos = null
           this.selectedStationID = null
 
-          // reset suggestions to the ones in localstorage
+          // Reset suggestions to the ones in localStorage
           this.suggestions = this.getLastSearches()
 
           return 
         }
 
-        const searchData = await fetchStations(this.searchQuery)
-        if (!searchData.length)
+        const stations = await fetchStations(currPos, this.searchQuery)
+        if (!stations.length)
           return // no station found 
 
-        this.suggestions = this.generateSaveableData(searchData)
+        this.suggestions = stations
         this.showStationSuggestions = true
       },
 
       searchStationsByLocation: async function() {
-        const currPos  = await getCurrPos(),
-              givenLat = currPos.coords.latitude, // 49.4525482
-              givenLon = currPos.coords.longitude // 11.1142636 
+        const currPos  = await getCurrPos()
 
-        const searchData = await fetchStationsByCoords(givenLat, givenLon)
-        if (!searchData.length)
+        const stations = await fetchStations(currPos)
+        if (!stations.length)
           return // no station found
 
-        const nearestStation = searchData[0]
+        const nearestStation = stations[0]
         
-        this.suggestions = this.generateSaveableData(searchData)
-        this.selectStation(searchData[0].VGNKennung)
-        this.searchQuery = this.suggestions[0].name.main
-      },
-
-      generateSaveableData: function(VAGAPIData) {
-        return VAGAPIData.map(station => {
-          const name = station.Haltestellenname.split('(')
-          return {
-            id: station.VGNKennung, 
-            name: {
-              main: name[0].trim(),
-              sub: name[1].replace(')', '')
-            }
-          }
-        })
+        this.suggestions = stations
+        this.selectStation(nearestStation.id)
+        this.searchQuery = nearestStation.name.main
       }
     },
 

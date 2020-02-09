@@ -11,18 +11,20 @@
 
     <div class="input__floating-label-container">
       <input 
-        @focus="$emit('focusInput')"
         @input="updateInput"
+        @focus="$emit('focus')"
+        @blur="$emit('blur')"
         :name="name" 
-        :type="type || 'text'" 
-        :placeholder="placeholder" 
         :value="value"
+        :type="type" 
+        :placeholder="placeholder"
+        :spellcheck="spellcheck"
+        :required="required"
         ref="input"
-        required
       />
-      <span :for="name">
+      <label :for="name">
         {{ placeholder }}
-      </span>
+      </label>
     </div>
 
     <div 
@@ -41,7 +43,40 @@
 
   export default {
     name: 'Input',
-    props: [ 'value', 'name', 'placeholder', 'iconLeft', 'iconRight', 'type' ],
+    props: {
+      'name': {
+        type: String,
+        default: ''
+      },
+      'value': {
+        type: String,
+        default: ''
+      },
+      'type': {
+        type: String,
+        default: 'text'
+      },
+      'placeholder': {
+        type: String,
+        default: ''
+      },
+      'iconLeft': {
+        type: Object,
+        default: null
+      },
+      'iconRight': {
+        type: Object,
+        default: null
+      },
+      'spellcheck': {
+        type: String,
+        default: 'false'
+      },
+      'required': {
+        type: String,
+        default: 'required'
+      }
+    },
     components: {
       SVGIcon
     },
@@ -80,8 +115,8 @@
         padding: 26px 1rem 12px;
         color: var(--color-text-primary);
 
-        &:focus ~ span,
-        &:valid ~ span {
+        &:focus ~ label,
+        &:valid ~ label {
           transform: translateY(-10px) scale(.8125);
         }
 
@@ -91,7 +126,7 @@
         &::-ms-input-placeholder { color: var(--color-bg-secondary) }
       }
 
-      span {
+      label {
         position: absolute;
         top: 20px;
         line-height: 1rem;
