@@ -191,12 +191,14 @@
         return lastSearches || []
       },
 
-      resetSearchInput: function() {
+      resetSearchInput: async function() {
         this.searchQuery = ''
         this.showStationSuggestions = true
+        this.suggestions = await this.getLastSearches()
       },
 
       searchStations: async function() {
+        console.log('searchstations()')
         const searchQuery = this.searchQuery,
               currPos     = await getCurrPos()
 

@@ -8,7 +8,7 @@
       Update verfügbar!
     </Snackbar>
 
-    <!-- <TabBar /> -->
+    <TabBar />
 
     <SVGIconProvider />
   </div>
