@@ -198,7 +198,6 @@
       },
 
       searchStations: async function() {
-        console.log('searchstations()')
         const searchQuery = this.searchQuery,
               currPos     = await getCurrPos()
 
