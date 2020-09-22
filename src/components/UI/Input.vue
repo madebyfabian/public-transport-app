@@ -121,7 +121,7 @@
         }
 
         // hide real placeholder
-        &::placeholder { color: var(--color-bg-secondary); opacity: 0 }
+        &::placeholder { font-size: 0px; } // was color: var(--color-bg-secondary); opacity: 0; but chrome bugged
         &:-ms-input-placeholder { color: var(--color-bg-secondary) }
         &::-ms-input-placeholder { color: var(--color-bg-secondary) }
       }
