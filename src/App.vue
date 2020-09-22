@@ -168,6 +168,8 @@
     height: var(--height-viewport);
     overflow-x: hidden;
     overflow-y: scroll;
+    max-width: 768px;
+    margin: 0 auto;
   }
 
   *:not(html) {
@@ -205,7 +207,7 @@
     &__fixed-box {
       position: sticky;
       top: 0;
-      width: 100vw;
+      width: 100%;
       padding: var(--space-status-bar) 1rem 1rem;
       z-index: 900;
       background: var(--color-bg-primary-transparent);
